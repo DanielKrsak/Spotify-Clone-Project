@@ -1,16 +1,14 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
+import { useUser } from "@/hooks/useUser";
 import Button from "@/components/Button";
 import useSubscribeModal from "@/hooks/useSubscribeModal";
-import { useUser } from "@/hooks/useUser";
 import { postData } from "@/libs/helpers";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
-import { toast } from "react-hot-toast";
 
-type Props = {};
-
-const AccountContent = (props: Props) => {
+const AccountContent = () => {
   const router = useRouter();
   const subscribeModal = useSubscribeModal();
   const { isLoading, subscription, user } = useUser();
@@ -31,9 +29,7 @@ const AccountContent = (props: Props) => {
       });
       window.location.assign(url);
     } catch (error) {
-      if (error) {
-        toast.error((error as Error).message);
-      }
+      if (error) return alert((error as Error).message);
     }
     setLoading(false);
   };
@@ -42,7 +38,7 @@ const AccountContent = (props: Props) => {
     <div className="mb-7 px-6">
       {!subscription && (
         <div className="flex flex-col gap-y-4">
-          <p>No Active Plan.</p>
+          <p>No active plan.</p>
           <Button onClick={subscribeModal.onOpen} className="w-[300px]">
             Subscribe
           </Button>
@@ -51,15 +47,16 @@ const AccountContent = (props: Props) => {
       {subscription && (
         <div className="flex flex-col gap-y-4">
           <p>
-            You are currently on the{" "}
-            <b>{subscription?.prices?.products?.name}</b> plan.
+            You are currently on the
+            <b> {subscription?.prices?.products?.name} </b>
+            plan.
           </p>
           <Button
-            className="w-[300px]"
             disabled={loading || isLoading}
             onClick={redirectToCustomerPortal}
+            className="w-[300px]"
           >
-            Open Customer Portal
+            Open customer portal
           </Button>
         </div>
       )}
